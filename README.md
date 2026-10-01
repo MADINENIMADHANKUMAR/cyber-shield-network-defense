@@ -83,25 +83,33 @@ The following architecture represents the implemented campus network, including 
 
 ## Topology Components
 
-| Component | Purpose |
-|---|---|
-| ISP-R1 | Internet/WAN connectivity and remote-access network |
-| EDGE-R1 | Campus perimeter routing, filtering, NAT, and IPsec VPN |
-| CORE-SW | Inter-VLAN routing and central security policy enforcement |
-| SW-ADMIN | Administration access switch |
-| SW-FACULTY | Faculty access switch |
-| SW-STUDENT | Student access switch |
-| SW-GUEST | Guest access switch |
-| SW-SERVER | Server access switch |
-| FACULTY-VPN-RTR | Remote faculty VPN gateway |
-| WRT300N | Faculty home wireless network |
-| SRV-DNS | DNS and sinkhole simulation |
-| SRV-WEB | Internal web service |
-| SRV-DB | Database service |
-| SRV-FILE | File service |
-| SRV-AUTH | Authentication service |
-| SRV-SYSLOG | Centralized Syslog server |
-| IT-ADMIN-PC | Network management workstation |
+| Component | Type | Purpose |
+|---|---|---|
+| ISP-R1 | Router | Internet/WAN connectivity and remote-access network |
+| EDGE-R1 | Router | Campus perimeter routing, filtering, NAT/PAT, and IPsec VPN |
+| CORE-SW | Multilayer Switch | Inter-VLAN routing and central security policy enforcement |
+| SW-ADMIN | Access Switch | Administration VLAN connectivity |
+| SW-FACULTY | Access Switch | Faculty VLAN connectivity |
+| SW-STUDENT | Access Switch | Student VLAN connectivity |
+| SW-GUEST | Access Switch | Guest VLAN connectivity |
+| SW-SERVER | Access Switch | Server VLAN connectivity |
+| FACULTY-VPN-RTR | Router | Remote faculty VPN gateway |
+| FACULTY-HOME-RTR / WRT300N | Wireless Router | Remote faculty home wireless network |
+| AP-FACULTY | Access Point | Faculty wireless access |
+| AP-GUEST | Access Point | Guest wireless access |
+| INTERNET-SRV | Server | Simulated Internet service |
+| SRV-DNS | Server | Internal DNS and DNS sinkhole simulation |
+| SRV-WEB | Server | Internal web service |
+| SRV-DB | Server | Database service |
+| SRV-FILE | Server | File service |
+| SRV-AUTH | Server | Authentication service |
+| SRV-SYSLOG | Server | Centralized Syslog monitoring |
+| IT-ADMIN-PC | PC | Network management workstation |
+| ADMIN-PC1–4 | PCs | Administration users |
+| FACULTY-PC1–4 | PCs | Faculty users |
+| STUDENT-PC1–8 | PCs | Student users |
+| GUEST-LAPTOP1–2 | Laptops | Guest users |
+| FACULTY-1–2 | Laptops | Remote faculty users |
 
 ---
 
@@ -302,7 +310,7 @@ Verified access includes:
 - File Server
 - Authentication Server
 - DNS Server
-- - Simulated Internet access
+- Simulated Internet access
 
 Remote Faculty access to the Management VLAN is blocked.
 
