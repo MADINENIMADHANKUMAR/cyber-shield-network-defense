@@ -1,9 +1,8 @@
-````markdown
 # Cyber Shield – Network Defense
 
-A secure campus network defense architecture built with Cisco Packet Tracer as part of the **Virtual Internship Program 2025 – Cyber Security Stream**.
+A secure campus network defense architecture designed and implemented using Cisco Packet Tracer.
 
-The project focuses on analyzing, securing, and extending a college campus network across three security scenarios: network security assessment, secure hybrid remote access, and web access control.
+The project focuses on network segmentation, access control, secure remote access, web-access control, network-device security, and centralized monitoring across a simulated college campus network.
 
 ---
 
@@ -11,96 +10,235 @@ The project focuses on analyzing, securing, and extending a college campus netwo
 
 | Item | Details |
 |---|---|
-| Project | Cyber Shield: Defending the Network |
-| Program | Virtual Internship Program 2025 |
-| Stream | Cyber Security |
+| Project | Cyber Shield – Network Defense |
 | Platform | Cisco Packet Tracer |
 | Domain | Cybersecurity / Network Security |
+| Architecture | Campus Network + Remote Faculty Access |
+| Network Model | Segmented Multi-VLAN Architecture |
+| Remote Access | Site-to-Site IPsec VPN |
+| Web Control | DNS Sinkhole Simulation + ACL Policies |
+| Management | SSHv2 + Local AAA |
+| Monitoring | Centralized Syslog |
 | Status | Practical implementation completed |
 
 ---
 
 ## Objectives
 
-- Analyze the college campus network and identify security risks.
+- Analyze the security posture of a simulated college campus network.
+- Identify network attack surfaces and trust boundaries.
 - Implement network segmentation using VLANs.
-- Apply ACL-based access control between trust zones.
-- Protect management and server networks.
-- Secure network-device administration using SSH.
+- Control inter-network communication using ACLs.
+- Protect server and management networks.
+- Secure network-device administration using SSHv2.
 - Implement switch port security.
-- Provide secure remote faculty access using IPsec VPN.
+- Provide secure remote faculty connectivity using IPsec VPN.
 - Implement DNS-based web filtering using a sinkhole simulation.
-- Monitor network events using centralized Syslog.
-- Identify security limitations and recommend production-level improvements.
+- Isolate Guest users from protected internal resources.
+- Monitor network-device events using centralized Syslog.
+- Test implemented security controls using Packet Tracer verification methods.
+- Identify platform limitations and recommend production-level improvements.
 
 ---
 
-# Part 1 – Network Security Assessment
+# 1. Network Security Architecture
 
-Part 1 analyzes the campus network from an internal red-team perspective and identifies potential attack surfaces, trust boundaries, and security weaknesses.
+The campus network is divided into separate security zones to reduce lateral movement and control communication between trusted and untrusted networks.
+
+## Network Zones
+
+| VLAN | Zone | Network | Purpose |
+|---|---|---|---|
+| VLAN 10 | Administration | 10.10.10.0/24 | Administrative users |
+| VLAN 20 | Faculty | 10.10.20.0/24 | Faculty users |
+| VLAN 30 | Students | 10.10.30.0/24 | Student users |
+| VLAN 40 | Guest | 10.10.40.0/24 | Untrusted guest devices |
+| VLAN 50 | Servers | 10.10.50.0/24 | Internal services |
+| VLAN 60 | Management | 10.10.60.0/24 | Network administration |
 
 ## Implemented Security Controls
 
 - VLAN-based network segmentation
 - Inter-VLAN routing
 - Extended ACLs
-- Perimeter traffic filtering
+- Standard ACLs
 - Guest network isolation
 - Server network protection
 - Management network isolation
+- Perimeter ACL filtering
 - SSHv2 management
 - Local AAA authentication
 - VTY source restrictions
 - Switch port security
+- NAT/PAT
 - Centralized Syslog monitoring
 
-## Network Zones
+---
 
-| VLAN | Zone | Network |
-|---|---|---|
-| VLAN 10 | Administration | 10.10.10.0/24 |
-| VLAN 20 | Faculty | 10.10.20.0/24 |
-| VLAN 30 | Students | 10.10.30.0/24 |
-| VLAN 40 | Guest | 10.10.40.0/24 |
-| VLAN 50 | Servers | 10.10.50.0/24 |
-| VLAN 60 | Management | 10.10.60.0/24 |
+# 2. Network Topology
 
-## Security Assessment
+The following architecture represents the implemented campus network, including the WAN perimeter, segmented campus VLANs, server infrastructure, management network, wireless networks, and remote faculty IPsec VPN.
 
-The network was analyzed for:
+![Cyber Shield Network Topology](topology/cyber-shield-topology.png)
+
+## Topology Components
+
+| Component | Purpose |
+|---|---|
+| ISP-R1 | Internet/WAN connectivity and remote-access network |
+| EDGE-R1 | Campus perimeter routing, filtering, NAT, and IPsec VPN |
+| CORE-SW | Inter-VLAN routing and central security policy enforcement |
+| SW-ADMIN | Administration access switch |
+| SW-FACULTY | Faculty access switch |
+| SW-STUDENT | Student access switch |
+| SW-GUEST | Guest access switch |
+| SW-SERVER | Server access switch |
+| FACULTY-VPN-RTR | Remote faculty VPN gateway |
+| WRT300N | Faculty home wireless network |
+| SRV-DNS | DNS and sinkhole simulation |
+| SRV-WEB | Internal web service |
+| SRV-DB | Database service |
+| SRV-FILE | File service |
+| SRV-AUTH | Authentication service |
+| SRV-SYSLOG | Centralized Syslog server |
+| IT-ADMIN-PC | Network management workstation |
+
+---
+
+# 3. Part 1 – Network Security Assessment
+
+The network was analyzed from an internal security-assessment perspective to identify attack surfaces, trust boundaries, unauthorized access paths, and opportunities for lateral movement.
+
+## Security Assessment Areas
 
 - Trust-zone separation
-- Lateral movement opportunities
-- Internet-facing attack surfaces
-- Wireless access points
+- Inter-VLAN communication
+- Internet-facing attack surface
+- Wireless networks
 - Server exposure
 - Management-plane exposure
 - Unauthorized access paths
 - Authentication boundaries
-- Web-access control weaknesses
+- Guest network isolation
+- Web-access control
 
-Risk-based countermeasures were identified for the major attack surfaces.
+## Security Boundaries
+
+### Guest Network
+
+Guest users are isolated from protected internal networks.
+
+Implemented controls include:
+
+- Guest VLAN
+- DNS access to the internal DNS server
+- Guest-to-server isolation
+- Guest-to-management isolation
+- Guest web-access restrictions
+- Internet access simulation
+
+### Server Network
+
+Servers are placed in VLAN 50.
+
+Guest access to the Server VLAN is blocked except for required DNS communication.
+
+### Management Network
+
+The Management VLAN is separated from:
+
+- Student network
+- Faculty network
+- Guest network
+- Remote Faculty network
+
+Network-device management is restricted using SSHv2 and source-based VTY access control.
 
 ---
 
-# Part 2 – Secure Hybrid Access
+# 4. Access Control
 
-Part 2 introduces secure remote access for faculty while preventing direct exposure of internal services to the Internet.
+ACLs are used to enforce communication policies between security zones.
 
-## Implemented
+## Guest Policy
 
-- Remote Faculty network
-- Faculty home wireless network
-- Dedicated VPN router
-- ISP/WAN simulation
-- Site-to-site IPsec VPN
-- ISAKMP Phase 1
-- IPsec transform set
-- Crypto map
-- VPN traffic ACLs
-- NAT exemption for VPN traffic
-- Remote Faculty access to approved internal services
-- Management network isolation
+Guest traffic is permitted to:
+
+- Access the DNS server for name resolution
+- Communicate within the Guest network
+- Access simulated Internet services
+
+Guest traffic is denied access to protected campus networks and Server VLAN resources except for the required DNS service.
+
+## Server Policy
+
+Guest traffic to the Server VLAN is denied except for DNS communication with:
+
+```text
+SRV-DNS
+10.10.50.10
+```
+
+## Management Policy
+
+The Management VLAN is protected from:
+
+```text
+Student Network
+Faculty Network
+Guest Network
+Remote Faculty Network
+```
+
+This prevents unauthorized users from directly accessing the network-management workstation.
+
+---
+
+# 5. Secure Network Device Management
+
+Network-device administration is secured using SSHv2.
+
+## Implemented Controls
+
+- SSH version 2
+- Local user authentication
+- Local AAA
+- VTY access restrictions
+- RSA key generation
+- Management VLAN restriction
+- Privileged EXEC protection
+
+Management access is restricted to the Management network.
+
+This reduces exposure of the network-device management plane to normal user networks.
+
+---
+
+# 6. Switch Port Security
+
+Port security was implemented on user-facing switch ports.
+
+## Implemented Configuration
+
+- Maximum MAC addresses per port
+- Sticky MAC learning
+- Violation mode: Restrict
+
+Port security was applied to:
+
+- Administration access ports
+- Faculty access ports
+- Student access ports
+- Guest access ports
+- Server access ports
+
+This provides protection against unauthorized devices being connected to protected access ports.
+
+---
+
+# 7. Part 2 – Secure Remote Faculty Access
+
+Remote faculty access is provided through a simulated site-to-site IPsec VPN.
 
 ## Remote Access Architecture
 
@@ -108,254 +246,472 @@ Part 2 introduces secure remote access for faculty while preventing direct expos
 Faculty Devices
       |
       v
-   WRT300N
+WRT300N
       |
       v
 FACULTY-VPN-RTR
       |
       v
-    ISP-R1
+ISP-R1
       |
       v
-   EDGE-R1
+EDGE-R1
       |
       v
-   CORE-SW
+CORE-SW
       |
       v
 Campus Internal Services
-````
+```
 
-## VPN Verification
+## Implemented VPN Components
 
-The IPsec VPN was tested in both directions.
+- Dedicated remote faculty network
+- Faculty home wireless network
+- Dedicated VPN router
+- ISP/WAN simulation
+- ISAKMP Phase 1
+- IPsec transform set
+- Crypto map
+- VPN traffic ACLs
+- NAT exemption for VPN traffic
+- Remote faculty access to approved internal services
+- Management VLAN isolation
 
-Verified:
+## VPN Parameters
 
-* Remote Faculty → Campus
-* Campus → Remote Faculty
-* Remote Faculty → Web Server
-* Remote Faculty → Database Server
-* Remote Faculty → File Server
-* Remote Faculty → Authentication Server
-* Remote Faculty → DNS Server
-* Remote Faculty → Internet
-* Remote Faculty → Management VLAN was blocked
+The VPN uses:
 
-IPsec encapsulation, encryption, decapsulation, and decryption were verified using Packet Tracer security-association information.
+- Pre-shared-key authentication
+- AES encryption
+- SHA hashing
+- Diffie-Hellman Group 2
+- IPsec ESP
+- AES/SHA transform set
 
 ---
 
-# Part 3 – Web Access Control
+# 8. VPN Security Policy
 
-Part 3 implements a web-access control framework for students, faculty, and guests.
+Remote Faculty users are allowed to access required internal services through the encrypted VPN tunnel.
 
-The design considers:
+Verified access includes:
 
-* User identity
-* Content category
-* Restricted destinations
-* Network trust level
-* Monitoring and logging
-* Circumvention risks
+- Web Server
+- Database Server
+- File Server
+- Authentication Server
+- DNS Server
+- Internet
 
-## Implemented
+Remote Faculty access to the Management VLAN is blocked.
 
-* DNS-based filtering simulation
-* DNS sinkhole mechanism
-* Student web policy
-* Faculty web policy
-* Guest web policy
-* Guest-to-server isolation
-* Restricted destination blocking
-* Internet access simulation
-* Centralized Syslog monitoring
+This separates normal application access from network-management access.
 
-## DNS Filtering Model
+---
+
+# 9. VPN Verification
+
+The VPN was verified using Packet Tracer connectivity testing and IPsec security-association information.
+
+## Verified
+
+- Remote Faculty → Campus
+- Campus → Remote Faculty
+- Remote Faculty → Web Server
+- Remote Faculty → Database Server
+- Remote Faculty → File Server
+- Remote Faculty → Authentication Server
+- Remote Faculty → DNS Server
+- Remote Faculty → Internet
+- Remote Faculty → Management VLAN blocked
+
+IPsec encapsulation, encryption, decapsulation, and decryption were verified using the router security-association information.
+
+---
+
+# 10. Part 3 – Web Access Control
+
+A DNS-based web-access control simulation was implemented for Student, Faculty, and Guest networks.
+
+The implementation uses a DNS sinkhole model combined with ACL-based destination blocking.
+
+## Web Access Model
+
+| User Group | Internal Resources | Internet | Restricted Destinations |
+|---|---|---|---|
+| Student | Allowed according to ACL policy | Allowed | Blocked |
+| Faculty | Allowed according to ACL policy | Allowed | Blocked |
+| Guest | Restricted | Allowed | Blocked |
+
+---
+
+# 11. DNS Sinkhole Simulation
+
+The internal DNS server is:
 
 ```text
-User Device
-     |
-     v
- DNS Server
-     |
-     +---- Allowed Destination
-     |
-     +---- Restricted Destination
-                |
-                v
-           192.0.2.1
-            Sinkhole
-                |
-                v
-             ACL Block
+SRV-DNS
+10.10.50.10
 ```
 
-The address `192.0.2.1` is used as a simulated sinkhole destination for restricted domains.
+Restricted domains are mapped to a simulated sinkhole address:
 
-Example DNS records:
+```text
+192.0.2.1
+```
+
+Example records:
 
 ```text
 blocked.example       -> 192.0.2.1
 social-block.example  -> 192.0.2.1
 ```
 
-This represents a DNS filtering/sinkhole simulation in Packet Tracer and is not intended to represent a production-grade category-aware DNS filtering service.
+Traffic destined for the simulated sinkhole is then blocked using ACL policies.
+
+## Important Scope
+
+This is a **DNS filtering and sinkhole simulation** implemented in Cisco Packet Tracer.
+
+It is not a production-grade category-aware DNS filtering service.
 
 ---
 
-# Web Access Policy
+# 12. Web Access Enforcement
 
-| User Group | Internal Resources              | Internet | Restricted Destinations |
-| ---------- | ------------------------------- | -------- | ----------------------- |
-| Student    | Allowed according to ACL policy | Allowed  | Blocked                 |
-| Faculty    | Allowed according to ACL policy | Allowed  | Blocked                 |
-| Guest      | Restricted                      | Allowed  | Blocked                 |
+Separate policies were implemented for:
 
-Guest users are prevented from directly accessing protected internal servers while retaining access to the simulated Internet.
+- Students
+- Faculty
+- Guests
+
+## Student
+
+Restricted destinations are blocked while permitted internal and Internet destinations remain accessible.
+
+## Faculty
+
+Restricted destinations are blocked while permitted internal and Internet destinations remain accessible.
+
+## Guest
+
+Guests are prevented from accessing protected internal servers while retaining access to the simulated Internet.
 
 ---
 
-# Monitoring and Logging
+# 13. Monitoring and Logging
 
 A dedicated Syslog server is deployed in the Server VLAN.
 
-**Syslog Server:** `10.10.50.60`
+```text
+SRV-SYSLOG
+10.10.50.60
+```
 
-Network-device events were successfully forwarded to the centralized Syslog server.
+Network-device logging is configured to forward events to the centralized Syslog server.
 
-Packet Tracer IOS does not support the ACL `log` keyword used for detailed ACL-match logging. Therefore, ACL-specific Syslog events are not claimed as implemented.
+## Monitoring Scope
 
----
+The implementation verifies:
 
-# Security Testing
+- Network-device event forwarding
+- Centralized Syslog availability
+- Router/switch logging configuration
 
-The implementation was tested using Packet Tracer connectivity tests, browser tests, ACL counters, routing verification, NAT verification, and IPsec security-association information.
+### Platform Limitation
 
-## Verified Controls
+The Packet Tracer IOS image does not support the ACL `log` keyword used for detailed ACL-match logging.
 
-* Guest → Internal Server: **Blocked**
-* Guest → Internet: **Allowed**
-* Guest → Restricted Sinkhole: **Blocked**
-* Remote Faculty → Internal Services: **Allowed**
-* Remote Faculty → Management VLAN: **Blocked**
-* Internet → Protected Internal Server: **Blocked**
-* IPsec VPN: **Active**
-* IPsec encryption/decryption: **Verified**
-* Centralized Syslog: **Verified**
-* SSHv2 management: **Implemented**
-* Port Security: **Implemented**
-* DNS filtering simulation: **Verified**
+Therefore, ACL-specific Syslog events are **not claimed as implemented**.
 
 ---
 
-# Attack Surface
+# 14. Security Testing
 
-The main attack surfaces identified in the project include:
+The network was tested using:
 
-### 1. Internet / WAN Perimeter
+- Packet Tracer Simple PDU
+- Ping/connectivity tests
+- Browser tests
+- ACL counters
+- Routing verification
+- NAT verification
+- IPsec security-association information
+- SSH verification
+- Port-security verification
+- DNS resolution testing
+
+## Verified Security Controls
+
+| Test | Result |
+|---|---|
+| Guest → Internal Server | Blocked |
+| Guest → Internet | Allowed |
+| Guest → Restricted Sinkhole | Blocked |
+| Remote Faculty → Internal Services | Allowed |
+| Remote Faculty → Management VLAN | Blocked |
+| Internet → Protected Internal Server | Blocked |
+| IPsec VPN | Active |
+| IPsec Encryption/Decryption | Verified |
+| Centralized Syslog | Verified |
+| SSHv2 Management | Implemented |
+| Port Security | Implemented |
+| DNS Sinkhole Simulation | Verified |
+
+---
+
+# 15. Attack Surface Analysis
+
+The major attack surfaces identified in the architecture are:
+
+## 1. Internet / WAN Perimeter
 
 The Internet-facing boundary is protected using perimeter ACL filtering.
 
-### 2. Wireless Networks
+### Residual Risk
 
-Faculty and Guest wireless networks are separated into different trust zones.
+A production deployment would require stronger perimeter controls such as:
 
-### 3. Server Network
-
-Servers are isolated in VLAN 50 and protected from unauthorized Guest access.
-
-### 4. Management Network
-
-The management VLAN is isolated from Student, Faculty, Guest, and Remote Faculty networks.
-
-### 5. User VLANs
-
-Administration, Faculty, Student, and Guest networks are separated using VLANs and ACL policies.
-
-### 6. Remote Access
-
-Remote Faculty access is provided through an IPsec VPN instead of exposing internal services directly to the Internet.
+- Next-generation firewall
+- IDS/IPS
+- Application-layer inspection
 
 ---
 
-# Limitations
+## 2. Wireless Networks
+
+Faculty and Guest wireless networks are separated into different trust zones.
+
+### Residual Risk
+
+Production wireless security should use:
+
+- WPA2/WPA3-Enterprise
+- 802.1X
+- Centralized authentication
+- Rogue access-point detection
+- Client isolation where appropriate
+
+---
+
+## 3. Server Network
+
+Servers are isolated in VLAN 50.
+
+Guest access to protected server resources is restricted.
+
+### Residual Risk
+
+A production environment could further improve isolation using:
+
+- Dedicated DMZ
+- Server-specific ACLs
+- Next-generation firewall
+- Application-layer controls
+
+---
+
+## 4. Management Network
+
+The Management VLAN is isolated from normal user networks.
+
+### Residual Risk
+
+Production environments should consider:
+
+- Dedicated management firewall
+- Centralized AAA
+- Multi-factor authentication
+- Out-of-band management
+
+---
+
+## 5. User VLANs
+
+Administration, Faculty, Student, and Guest networks are separated using VLANs and ACL policies.
+
+### Residual Risk
+
+Production environments could add:
+
+- Network Access Control
+- 802.1X
+- Endpoint Detection and Response
+- More granular application-level policies
+
+---
+
+## 6. Remote Access
+
+Remote Faculty access is provided through an IPsec VPN rather than directly exposing internal services to the Internet.
+
+### Residual Risk
+
+Production remote access should consider:
+
+- MFA
+- Centralized identity management
+- Device posture validation
+- Identity-aware access controls
+
+---
+
+# 16. Limitations
 
 Some production-level controls could not be fully implemented because of Cisco Packet Tracer platform limitations.
 
 ## Time-Based Web Access
 
-The project includes policy requirements based on:
+The intended policy model considers:
 
-* User group
-* Access time
-* Content category
+- User group
+- Access time
+- Content category
 
 However, the Packet Tracer IOS image used in this project does not support the required `time-range` functionality.
 
 Therefore:
 
-* Policy design: **Completed**
-* Time-based enforcement: **Not implemented**
-* Production recommendation: Use a next-generation firewall, secure web gateway, proxy, or DNS filtering platform supporting scheduled policies.
+| Capability | Status |
+|---|---|
+| Policy design | Completed |
+| Time-based enforcement | Not implemented |
+| Production solution | NGFW / Secure Web Gateway / Scheduled DNS Filtering |
 
-## RADIUS / Central AAA
+The time-based requirement is therefore documented as a platform limitation rather than being falsely represented as implemented.
+
+---
+
+## Centralized AAA / RADIUS
 
 Local AAA authentication is implemented and verified for SSH management.
 
 RADIUS-based centralized authentication was explored but was not included as a verified implementation.
 
-This is treated as a recommended production improvement rather than an implemented feature.
+For production deployment, centralized AAA with MFA is recommended.
 
 ---
 
-# Recommended Production Improvements
+# 17. Recommended Production Improvements
 
 The Packet Tracer implementation provides a practical network-security baseline.
 
 For a production environment, the architecture could be strengthened with:
 
-* Next-generation firewall
-* IDS/IPS
-* WPA2/WPA3-Enterprise
-* 802.1X / NAC
-* Centralized RADIUS/AAA
-* Multi-factor authentication
-* Secure web gateway
-* Layer 7 proxy/firewall
-* Enterprise DNS filtering
-* Endpoint Detection and Response (EDR)
-* SIEM integration
-* Dedicated DMZ
-* More granular server access policies
-* Scheduled web-access enforcement
+- Next-generation firewall
+- IDS/IPS
+- WPA2/WPA3-Enterprise
+- 802.1X / NAC
+- Centralized RADIUS/AAA
+- Multi-factor authentication
+- Secure Web Gateway
+- Layer 7 proxy/firewall
+- Enterprise DNS filtering
+- Endpoint Detection and Response (EDR)
+- SIEM integration
+- Dedicated DMZ
+- More granular server access policies
+- Scheduled web-access enforcement
+- Identity-aware remote access
 
 ---
 
-# Technologies Used
+# 18. Technologies Used
 
-* Cisco Packet Tracer
-* Cisco IOS
-* VLAN
-* Inter-VLAN Routing
-* Extended ACL
-* Standard ACL
-* SSHv2
-* Local AAA
-* Port Security
-* NAT/PAT
-* IPsec VPN
-* ISAKMP
-* DNS
-* DNS Sinkhole Simulation
-* Syslog
+- Cisco Packet Tracer
+- Cisco IOS
+- VLAN
+- Inter-VLAN Routing
+- Extended ACL
+- Standard ACL
+- SSHv2
+- Local AAA
+- Port Security
+- NAT/PAT
+- IPsec VPN
+- ISAKMP
+- DNS
+- DNS Sinkhole Simulation
+- Syslog
 
 ---
 
-# Network Topology
+# 19. Project Structure
 
-The following diagram shows the complete campus network architecture, including the Internet/WAN perimeter, campus VLANs, server network, management network, wireless networks, and remote faculty IPsec VPN.
+```text
+cyber-shield-network-defense/
+│
+├── README.md
+│
+├── topology/
+│   └── cyber-shield-topology.png
+│
+├── packet-tracer/
+│   └── cyber-shield-network.pkt
+│
+├── documentation/
+│   ├── network-security-assessment.md
+│   ├── remote-access-design.md
+│   └── web-access-policy.md
+│
+└── evidence/
+    ├── vpn-verification/
+    ├── acl-verification/
+    ├── port-security/
+    ├── syslog/
+    └── dns-filtering/
+```
 
-<img width="1040" height="604" alt="image" src="https://github.com/user-attachments/assets/fc567847-9d86-49ab-b7db-d6d60a92bb7f" />
+---
+
+# 20. Project Status
+
+| Area | Status |
+|---|---|
+| Network Segmentation | Completed |
+| Inter-VLAN Routing | Completed |
+| ACL-Based Access Control | Completed |
+| Guest Isolation | Completed |
+| Server Protection | Completed |
+| Management Network Isolation | Completed |
+| SSHv2 Management | Completed |
+| Local AAA | Completed |
+| Port Security | Completed |
+| NAT/PAT | Completed |
+| IPsec VPN | Completed |
+| DNS Sinkhole Simulation | Completed |
+| Web Access Policies | Completed |
+| Centralized Syslog | Completed |
+| Time-Based Enforcement | Platform Limitation |
+| RADIUS | Recommended Improvement |
+
+---
+
+# 21. Key Security Outcomes
+
+The implemented architecture demonstrates:
+
+- Segmentation of campus users into separate trust zones.
+- Controlled communication between VLANs.
+- Isolation of Guest users from protected internal resources.
+- Protection of the Management VLAN.
+- Secure network-device administration using SSHv2.
+- Access-port protection using port security.
+- Encrypted remote faculty connectivity using IPsec VPN.
+- DNS sinkhole-based web filtering simulation.
+- Centralized network-device logging using Syslog.
+- Verification of security controls through practical network testing.
+- Identification of limitations and production-level security improvements.
+
+---
+
+## Conclusion
+
+Cyber Shield demonstrates a segmented and security-focused campus network architecture implemented in Cisco Packet Tracer.
+
+The project combines network segmentation, ACL-based access control, secure device administration, port security, IPsec VPN remote access, DNS sinkhole simulation, and centralized Syslog monitoring.
+
+The design also documents the limitations of a Packet Tracer-based environment and identifies additional controls required to transition the architecture toward a production-grade enterprise network.
 
 ---
