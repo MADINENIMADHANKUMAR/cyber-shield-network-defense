@@ -79,7 +79,7 @@ The campus network is divided into separate security zones to reduce lateral mov
 
 The following architecture represents the implemented campus network, including the WAN perimeter, segmented campus VLANs, server infrastructure, management network, wireless networks, and remote faculty IPsec VPN.
 
-![Cyber Shield Network Topology](topology/cyber-shield-topology.png)
+<img width="1255" height="701" alt="image" src="https://github.com/user-attachments/assets/86078458-d228-4a01-b2e8-8ae42d4b32a4" />
 
 ## Topology Components
 
@@ -302,7 +302,7 @@ Verified access includes:
 - File Server
 - Authentication Server
 - DNS Server
-- Internet
+- - Simulated Internet access
 
 Remote Faculty access to the Management VLAN is blocked.
 
@@ -637,58 +637,8 @@ For a production environment, the architecture could be strengthened with:
 
 ---
 
-# 19. Project Structure
 
-```text
-cyber-shield-network-defense/
-│
-├── README.md
-│
-├── topology/
-│   └── cyber-shield-topology.png
-│
-├── packet-tracer/
-│   └── cyber-shield-network.pkt
-│
-├── documentation/
-│   ├── network-security-assessment.md
-│   ├── remote-access-design.md
-│   └── web-access-policy.md
-│
-└── evidence/
-    ├── vpn-verification/
-    ├── acl-verification/
-    ├── port-security/
-    ├── syslog/
-    └── dns-filtering/
-```
-
----
-
-# 20. Project Status
-
-| Area | Status |
-|---|---|
-| Network Segmentation | Completed |
-| Inter-VLAN Routing | Completed |
-| ACL-Based Access Control | Completed |
-| Guest Isolation | Completed |
-| Server Protection | Completed |
-| Management Network Isolation | Completed |
-| SSHv2 Management | Completed |
-| Local AAA | Completed |
-| Port Security | Completed |
-| NAT/PAT | Completed |
-| IPsec VPN | Completed |
-| DNS Sinkhole Simulation | Completed |
-| Web Access Policies | Completed |
-| Centralized Syslog | Completed |
-| Time-Based Enforcement | Platform Limitation |
-| RADIUS | Recommended Improvement |
-
----
-
-# 21. Key Security Outcomes
+# 19. Key Security Outcomes
 
 The implemented architecture demonstrates:
 
