@@ -19,7 +19,6 @@ The project focuses on network segmentation, access control, secure remote acces
 | Web Control | DNS Sinkhole Simulation + ACL Policies |
 | Management | SSHv2 + Local AAA |
 | Monitoring | Centralized Syslog |
-| Status | Practical implementation completed |
 
 ---
 
